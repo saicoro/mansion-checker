@@ -2,9 +2,12 @@ name: 31sumai Monitor
 
 on:
   schedule:
-    # 5分ごとに実行 (UTC時間なので日本時間の-9時間で設定)
-    - cron: '*/5 * * * *'
-  workflow_dispatch: # 手動で「今すぐ実行」ボタンを押せるようにする設定
+    # 毎日 日本時間 09:00 〜 24:00 (5分おき)
+    # 日本時間 09:00-24:00 は UTC 00:00-15:00 に相当します
+    # 5番目の項目を '*' にすることで「毎日」実行されます
+    - cron: '*/5 0-14 * * *'
+  
+  workflow_dispatch: # 手動実行用ボタン
 
 jobs:
   build:
@@ -25,6 +28,5 @@ jobs:
 
       - name: Run script
         env:
-# 左側がプログラム内で使う名前、右側が金庫に保存した名前
           LINE_TOKEN: ${{ secrets.LINE_NOTIFY_TOKEN }}
         run: python monitor.py
