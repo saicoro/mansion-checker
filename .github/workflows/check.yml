@@ -1,0 +1,30 @@
+name: 31sumai Monitor
+
+on:
+  schedule:
+    # 5分ごとに実行 (UTC時間なので日本時間の-9時間で設定)
+    - cron: '*/5 * * * *'
+  workflow_dispatch: # 手動で「今すぐ実行」ボタンを押せるようにする設定
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install playwright requests
+          playwright install chromium
+
+      - name: Run script
+        env:
+          # ステップ1で登録したトークンをプログラムに渡す
+          LINE_TOKEN: ${{ secrets.LINE_NOTIFY_TOKEN }}
+        run: python monitor.py
