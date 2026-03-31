@@ -1,13 +1,18 @@
+import os
 import requests
 from playwright.sync_api import sync_playwright
 
 # --- 設定エリア ---
-LINE_TOKEN = "m2l+a2223726047@m2l.codyltech.com"
+# 直接トークンを書かず、OS（環境変数）から読み込むように変更
+LINE_TOKEN = os.getenv("LINE_TOKEN") 
 TARGET_URL = "https://www.31sumai.com/attend/X2571/"
 # ----------------
 
 def send_line_notification(message):
-    """LINEに通知を送る関数"""
+    # ここは変更なし
+    if not LINE_TOKEN:
+        print("エラー: LINE_TOKENが設定されていません。")
+        return
     url = "https://notify-api.line.me/api/notify"
     headers = {"Authorization": f"Bearer {LINE_TOKEN}"}
     payload = {"message": message}
