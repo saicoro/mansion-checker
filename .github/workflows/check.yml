@@ -25,6 +25,6 @@ jobs:
 
       - name: Run script
         env:
-          # ステップ1で登録したトークンをプログラムに渡す
+# 左側がプログラム内で使う名前、右側が金庫に保存した名前
           LINE_TOKEN: ${{ secrets.LINE_NOTIFY_TOKEN }}
         run: python monitor.py
