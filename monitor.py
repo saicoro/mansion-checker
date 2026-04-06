@@ -5,7 +5,7 @@ from email.mime.text import MIMEText
 from playwright.sync_api import sync_playwright
 
 # --- 設定（通知先） ---
-LINE_TOKEN = os.getenv("LINE_TOKEN")
+LINE_TOKEN = os.getenv("LINE_NOTIFY_TOKEN")
 EMAIL_USER = os.getenv("EMAIL_USER")
 EMAIL_PASS = os.getenv("EMAIL_PASS")
 EMAIL_RECEIVER = os.getenv("EMAIL_RECEIVER")
