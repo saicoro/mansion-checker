@@ -36,4 +36,5 @@ jobs:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
           EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }} # ←これが必要です
         run: python monitor.py
