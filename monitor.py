@@ -20,6 +20,11 @@ def send_notifications(site_name, site_url):
     """発見時にDiscordとメールで一斉通知する"""
     message = f"【予約空き発見！】\n物件：{site_name}\n\n今すぐ予約：\n{site_url}"
     
+    # 【デバッグ用】今の設定値をログに強制表示
+    print(f"--- 通知テスト開始 ---")
+    print(f"DISCORD_URLの設定値: {'設定あり' if DISCORD_URL else '未設定(None)'}")
+    print(f"EMAIL_USERの設定値: {'設定あり' if EMAIL_USER else '未設定(None)'}")
+    
     # 1. Discord通知（原因調査用ログ追加版）
     if DISCORD_URL:
         try:
