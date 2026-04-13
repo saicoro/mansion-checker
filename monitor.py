@@ -20,15 +20,16 @@ def send_notifications(site_name, site_url):
     """発見時にDiscordとメールで一斉通知する"""
     message = f"【予約空き発見！】\n物件：{site_name}\n\n今すぐ予約：\n{site_url}"
     
-    # 1. Discord通知（新機能：完全無料・無制限）
+    # 1. Discord通知（原因調査用ログ追加版）
     if DISCORD_URL:
         try:
-            # Discord形式のJSONで送信
-            main_content = {"content": f"@everyone {message}"} # @everyone で全員にプッシュ通知
-            requests.post(DISCORD_URL, json=main_content, timeout=10)
-            print("Discord送信成功")
+            main_content = {"content": f"@everyone {message}"}
+            response = requests.post(DISCORD_URL, json=main_content, timeout=10)
+            print(f"Discord送信ステータス: {response.status_code}") # ここが 200 なら成功
+            if response.status_code != 200:
+                print(f"Discordエラー詳細: {response.text}")
         except Exception as e:
-            print(f"Discord送信エラー: {e}")
+            print(f"Discord接続エラー: {e}")
 
     # 2. メール通知（複数アドレス対応）
     if EMAIL_USER and EMAIL_PASS and EMAIL_RECEIVER:
