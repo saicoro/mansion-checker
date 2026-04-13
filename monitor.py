@@ -65,13 +65,28 @@ def check_site(page, site):
             pass
         page.wait_for_timeout(5000)
         
-        has_circle = (page.locator(".status_3").count() > 0) or ("○" in page.content())
+        # --- ここから修正 ---
         
-        if has_circle:
-            print(f"【発見！】{name}")
+        # 1. まずカレンダーの「テーブル（表）」や「予約リスト」のエリアだけに絞り込む
+        # ※三井不動産系のレジデンシャルサイト等でよく使われる範囲指定です
+        calendar_area = page.locator("#calendar, .calendar, .reservation-table, #app")
+        
+        # 2. そのエリアの中で「クリック可能な ○」があるか探す
+        # status_3 クラスかつ、中身に "○" が含まれる要素のみをカウント
+        active_circles = calendar_area.locator(".status_3:has-text('○')").count()
+        
+        # 3. または、aタグ（リンク）になっている「○」を探す（説明文はリンクではないことが多いため）
+        clickable_circles = calendar_area.locator("a:has-text('○'), a:has-text('△')").count()
+
+        if active_circles > 0 or clickable_circles > 0:
+            # 見つけた要素が本当に表示されているか(visible)も確認するとより正確です
+            print(f"【発見！】実質的な空き枠を検知しました: {name}")
             send_notifications(name, url)
         else:
-            print(f"空きなし: {name}")
+            print(f"空きなし: {name} (凡例以外の○は見つかりませんでした)")
+            
+        # --- ここまで修正 ---
+
     except Exception as e:
         print(f"エラー発生 ({name}): {e}")
 
