@@ -82,26 +82,23 @@ def check_site(page, site):
         # パターンB: クラス名で判定（これが本命）
         count += available_slots.count()
 
-        if count > 0:
-            # 【重要】ただし、凡例（説明文）のエリアに含まれるものは除外したい
-            # 多くのサイトで凡例は .legend や .header にあるため、それ以外を有効とする
+    if count > 0:
             all_found = page.locator(".status_3, .status_2").all()
             real_slots = 0
             for slot in all_found:
-                # 凡例エリア（親要素にlegend等がある場合）は無視
                 is_legend = slot.evaluate("node => node.closest('.legend, .header, #legend') !== null")
                 if not is_legend:
                     real_slots += 1
             
             if real_slots > 0 or count > 0:
                 print(f"【発見！】有効な予約枠を検知しました: {name}")
-                has_circle = True
+                # --- ここで直接関数を呼ぶ ---
+                send_notifications(name, url) 
+                return # 通知を送ったらこの物件のチェックは終了
             else:
                 print(f"空きなし: {name} (検知されたのは凡例のみでした)")
-                has_circle = False
         else:
             print(f"空きなし: {name} (要素が見つかりませんでした)")
-            has_circle = False
 
     except Exception as e:
         print(f"エラー発生 ({name}): {e}")
