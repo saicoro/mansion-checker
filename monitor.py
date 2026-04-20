@@ -64,25 +64,13 @@ def check_site(page, site):
         except:
             pass
         page.wait_for_timeout(5000)
-        
-# --- 修正後の判定ロジック（より広範囲・高精度版） ---
-        
-        # 1. 予約可能な枠に使われる「クラス名」を直接探す
-        # status_3 (○), status_2 (△) など、サイトが空き状況を定義しているクラスをカウント
-        # さらに、その要素が「disabled（無効）」になっていないかを確認
+
+        # 判定ロジック
         available_slots = page.locator(".status_3, .status_2, .available").filter(has_not=page.locator(".disabled, .past"))
-        
-        # 2. ページ全体の「クリック可能な要素」の中から、空きを示すキーワードが含まれるものを探す
-        # 文字だけでなく、aria-label（読み上げ用テキスト）なども対象に入れます
-        count = 0
-        
-        # パターンA: リンク(a)の中に空きマークがある
-        count += page.locator("a:has-text('○'), a:has-text('△'), a:has-text('予約')").count()
-        
-        # パターンB: クラス名で判定（これが本命）
+        count = page.locator("a:has-text('○'), a:has-text('△'), a:has-text('予約')").count()
         count += available_slots.count()
 
-    if count > 0:
+        if count > 0:
             all_found = page.locator(".status_3, .status_2").all()
             real_slots = 0
             for slot in all_found:
@@ -92,13 +80,11 @@ def check_site(page, site):
             
             if real_slots > 0 or count > 0:
                 print(f"【発見！】有効な予約枠を検知しました: {name}")
-                # --- ここで直接関数を呼ぶ ---
-                send_notifications(name, url) 
-                return # 通知を送ったらこの物件のチェックは終了
+                send_notifications(name, url) # ここで通知を直接実行
             else:
                 print(f"空きなし: {name} (検知されたのは凡例のみでした)")
         else:
-            print(f"空きなし: {name} (要素が見つかりませんでした)")
+            print(f"空きなし: {name}")
 
     except Exception as e:
         print(f"エラー発生 ({name}): {e}")
