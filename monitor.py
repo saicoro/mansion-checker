@@ -12,7 +12,6 @@ EMAIL_RECEIVER = os.getenv("EMAIL_RECEIVER")
 
 # --- 監視対象リスト ---
 TARGET_SITES = [
-    {"name": "パークコート麻布十番東京ザタワー", "url": "https://www.31sumai.com/attend/X2571/"},
     {"name": "パークコートお茶の水ザタワー", "url": "https://www.31sumai.com/attend/X2125/"},
 ]
 
